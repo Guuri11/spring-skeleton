@@ -3,15 +3,10 @@ package com.dev.skeleton.domain.mapper;
 import com.dev.skeleton.application.product.ProductDto;
 import com.dev.skeleton.application.product.ProductRequest;
 import com.dev.skeleton.domain.Product;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
-
-  @Autowired
-  private ModelMapper modelMapper;
 
   public ProductDto toDto(final Product entity) {
 
