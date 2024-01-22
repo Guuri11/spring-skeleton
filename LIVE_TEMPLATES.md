@@ -108,6 +108,19 @@ public interface $DOMAIN$Repository extends JpaRepository<$DOMAIN$, java.util.UU
 }
 ```
 
+### repo-webflux ➡ Create repository from domain for webflux
+
+```
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+public interface $DOMAIN$Repository extends ReactiveCrudRepository<$DOMAIN$, java.util.UUID> {
+
+}
+
+```
+
 ### controller ➡ Generate a controller template
 
 ```
@@ -188,4 +201,75 @@ public class $DOMAIN_NAME$Controller extends BaseController {
     return ResponseEntity.noContent()
         .build();
   }
+```
+
+### controller-crud-webflux ➡ create a controller CRUD from a domain in Spring Weblux
+```
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping("/api/v$VERSION_NUMBER$/$PATH$")
+@RequiredArgsConstructor
+public class $DOMAIN_NAME$Controller {
+
+  private final $DOMAIN_NAME$Service $SERVICE_NAME$Service;
+
+  @GetMapping
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
+  public Flux<$DOMAIN$Rs> all() {
+    return $DOMAIN_LOWERCASE$Service.all();
+  }
+
+  @GetMapping("/{id}")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "404", description = "Item not found"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
+  public Mono<$DOMAIN$Rs> one(@PathVariable("id") final java.util.UUID id) {
+    return $DOMAIN_LOWERCASE$Service.one(id);
+  }
+
+  @PostMapping
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "401", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
+  public Mono<$DOMAIN$Rs> create(@RequestBody final $DOMAIN$Request $DOMAIN_LOWERCASE$) {
+    return $DOMAIN_LOWERCASE$Service.create($DOMAIN_LOWERCASE$);
+  }
+
+  @PutMapping("/{id}")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "401", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
+  public Mono<$DOMAIN$Rs> replace(@RequestBody final $DOMAIN$Request $DOMAIN_LOWERCASE$, @PathVariable("id") final java.util.UUID id) {
+    return $DOMAIN_LOWERCASE$Service.update($DOMAIN_LOWERCASE$, id);
+  }
+
+  @DeleteMapping("/{id}")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
+  public Mono<ResponseEntity<Void>> delete(@PathVariable("id") final java.util.UUID id) {
+    return $DOMAIN_LOWERCASE$Service.delete(id)
+        .then(Mono.just(ResponseEntity.noContent().<Void>build()));
+  }
+}
+
 ```
